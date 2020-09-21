@@ -1,0 +1,47 @@
+=================================================================
+==224==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ffffacaae08 at pc 0x7f5ba6a00ee7 bp 0x7ffffacaadb0 sp 0x7ffffacaada0
+WRITE of size 4 at 0x7ffffacaae08 thread T0
+    #0 0x7f5ba6a00ee6 in main /home/yeputons/200903/ub-02.cpp:6
+    #1 0x7f5ba4ed1b96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)
+    #2 0x7f5ba6a00d49 in _start (/home/yeputons/200903/ub-02+0xd49)
+
+Address 0x7ffffacaae08 is located in stack of thread T0 at offset 72 in frame
+    #0 0x7f5ba6a00e39 in main /home/yeputons/200903/ub-02.cpp:4
+
+  This frame has 1 object(s):
+    [32, 72) 'a' <== Memory access at offset 72 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /home/yeputons/200903/ub-02.cpp:6 in main
+Shadow bytes around the buggy address:
+  0x10007f58d570: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d5b0: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 00
+=>0x10007f58d5c0: 00[f2]f2 f2 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d5f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10007f58d610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==224==ABORTING

@@ -1,0 +1,6 @@
+1. g++ compiles the file
+2. Array overflow is detected via -fsanitize=address
+3. Valgrind runs successfully (array overflow detection is optional)
+4. std::vector overflow is detected via _GLIBCXX_DEBUG
+5. Optional: CLion works
+6. If CLion: -Wall -Wextra -Werror
