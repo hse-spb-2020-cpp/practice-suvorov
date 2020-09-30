@@ -5,8 +5,9 @@
 
 using Container = std::map<int, double>;
 using ContainerIterator = Container::iterator;
+using ContainerConstIterator = Container::const_iterator;
 
-auto to_string(ContainerIterator begin, ContainerIterator end) {
+auto to_string(ContainerConstIterator begin, ContainerConstIterator end) {
     std::stringstream s;
     s << "{";
     for (auto it = begin; it != end; ++it) {
