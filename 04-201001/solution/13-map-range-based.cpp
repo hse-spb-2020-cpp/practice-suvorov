@@ -13,7 +13,7 @@ int main() {
     };
 
     std::stringstream s;
-    for (auto &[key, value] : data) {
+    for (auto &[key, value] : data) {  // Hint: use structured binding.
         s << key << " -> " << value << "\n";
         value += 10;
     }

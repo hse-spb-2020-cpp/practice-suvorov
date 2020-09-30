@@ -12,7 +12,7 @@ int main() {
         {3, 3.5}
     };
 
-    std::pair<const int, double> &it = *data.begin();
+    std::pair<const int, double> &it = *data.begin();  // Do not use auto.
     assert(it.first == 1);
     assert(it.second == 1.5);
 
