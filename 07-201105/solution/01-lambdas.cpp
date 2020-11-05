@@ -59,3 +59,16 @@ TEST_CASE("generator") {
     CHECK(generator() == 2);
     CHECK(generator() == 3);
 }
+
+TEST_CASE("capture this") {
+    struct Foo {
+        int modulo;
+
+        int operator()(const std::vector<int> &values) const {
+            return std::count_if(values.begin(), values.end(), [this](int value) { return value % modulo == 0; });
+        }
+    };
+    Foo f{3};
+    CHECK(f(std::vector{1, 2, 3}) == 1);
+    CHECK(f(std::vector{1, 2, 3, 4, 6, 6}) == 3);
+}
