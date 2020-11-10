@@ -11,7 +11,15 @@ private:
     Compare compare_;
 
 public:
-    MinHolder(const Compare &compare = Compare()) : compare_(compare) {}
+    // Bad old solution (not explicit):
+    // MinHolder(const Compare &compare = Compare()) : compare_(compare) {}
+    // Better solution (but default constructor is explicit, although GCC disagrees: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97755)
+    // explicit MinHolder(const Compare &compare = Compare()) : compare_(compare) {}
+
+    // Best solution
+    MinHolder() {}  // Also, it does not create another temporary for 'compare'.
+    explicit MinHolder(const Compare &compare) : compare_(compare) {}
+
 
     void operator()(const T &value) {
         if (!min_value_ || compare_(value, *min_value_)) {
@@ -37,6 +45,12 @@ TEST_CASE("default constructor is enough") {
     CHECK(h.get() == -20);
     h(-21);
     CHECK(h.get() == -21);
+}
+
+TEST_CASE("default constructor is implicit") {
+    MinHolder<int> h = {};
+    h(0);
+    CHECK(h.get() == 0);
 }
 
 TEST_CASE("custom comparator with default ctor") {

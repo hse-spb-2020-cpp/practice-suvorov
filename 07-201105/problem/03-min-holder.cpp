@@ -23,6 +23,12 @@ TEST_CASE("default constructor is enough") {
     CHECK(h.get() == -21);
 }
 
+TEST_CASE("default constructor is implicit") {
+    MinHolder<int> h = {};
+    h(0);
+    CHECK(h.get() == 0);
+}
+
 TEST_CASE("custom comparator with default ctor") {
     MinHolder<int, std::greater<int>> h;
     h(10);
