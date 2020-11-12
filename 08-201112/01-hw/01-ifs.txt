@@ -1,0 +1,8 @@
+lab02-circular-buffer solution:
+    125 lines, including comments.
+    3 `if` in `struct circular_buffer`.
+    2 `if` and 1 `for` loop in `operator==`.
+    The rest is linear.
+    Read operations: 1 line each.
+    pop: 1 line assert + 1 line modification.
+    push: 1 line assert + 1 line modification + 1 line copy + 1 line for a temporary.
