@@ -6,6 +6,8 @@ template<typename T>
 struct unique_ptr {
     T *data;
 
+    unique_ptr(T *data_ = nullptr) : data(data_) {}
+
     unique_ptr(unique_ptr &&other)
         : data(std::exchange(other.data, nullptr)) {  // OK
     }
