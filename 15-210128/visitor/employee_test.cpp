@@ -8,11 +8,12 @@
 #define TEST_BASIC
 #define TEST_INHERITANCE
 #define TEST_POLYMORPHIC_VECTOR
-#define TEST_PRINT_TO
+//#define TEST_PRINT_TO
 #define TEST_OUT_OPERATOR
 #define TEST_READ_FROM_SINGLE
 #define TEST_READ_FROM_FACTORY
 #define TEST_NO_SLICING
+#define TEST_SIMPLIFIED_VISITOR
 
 #ifdef TEST_BASIC
 TEST_CASE("There is no default constructor") {
@@ -222,3 +223,30 @@ TEST_CASE("Copy and move for Employee are non-public to prevent slicing") {
                                 const employee::SalesManager &>);
 }
 #endif  // TEST_NO_SLICING
+
+#ifdef TEST_SIMPLIFIED_VISITOR  // !!
+TEST_CASE("SimplifiedEmployeeVisitor") {
+    auto is_developer = [](const employee::Employee &e) {
+        struct IsDeveloperVisitor : employee::SimplifiedEmployeeVisitor {
+            bool is_developer;
+            void visit(const employee::Employee &) override {
+                // Обязательно реализовать логику, иначе будет бесконечная
+                // рекурсия.
+                is_developer = false;
+            }
+            void visit(const employee::Developer &) override {
+                is_developer = true;
+            }
+            // Даже если появляются новые наследники, ничего делать не надо.
+        } v;
+        e.accept(v);
+        return v.is_developer;
+    };
+
+    employee::Developer d("Igor", "Igorev",
+                          employee::ProgrammingLanguage::Python);
+    employee::SalesManager s("Igor", "Igorev", employee::Region::EU);
+    CHECK(is_developer(d));
+    CHECK(!is_developer(s));
+}
+#endif  // TEST_SIMPLIFIED_VISITOR
