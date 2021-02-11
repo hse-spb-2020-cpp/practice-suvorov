@@ -33,6 +33,7 @@ int main() {
     Foo *foo3 = static_cast<Foo*>(static_cast<void*>(buf /* array-to-pointer decay */));
 
     new (foo) Foo();  // placement new, лежит в <new>
+    //  new (buf) Foo();  // Так тоже можно, placement new хочет void*, главное - не делать два new подряд.
     std::cout << foo->x << "\n";
     foo->~Foo();
 //    delete foo;  // UB
