@@ -1,0 +1,3 @@
+https://www.geeksforgeeks.org/c-plus-plus-gq/exception-handling-gq/
+Только вопросы 1, 4-9.
+Вопросы 5 и 6 чересчур изощрённые.
