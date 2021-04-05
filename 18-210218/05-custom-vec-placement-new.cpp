@@ -35,8 +35,10 @@ struct vector {
     {
         for (std::size_t i = 0; i < size; i++) {
             try {
+                // 05.04.2021: не факт, что так вообще можно делать, кстати: может быть UB: https://stackoverflow.com/questions/66365928/is-it-ub-to-placement-new-datai-instead-of-data-i
+                // Но мы на курсе делаем и считаем, что не взорвётся. Самостоятельно писать vector<> не надо.
                 new (data + i) T();
-                // new (&data[i]) T();  // TODO Егору: а не UB ли это?
+                // new (&data[i]) T();
             } catch (...) {
                 for (std::size_t j = 0; j < i; j++) {
                     data[j].~T();
