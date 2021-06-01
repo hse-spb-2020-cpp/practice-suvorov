@@ -4,4 +4,5 @@ project(solution)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(test_conditional test_conditional.cpp doctest_main.cpp)
+add_executable(test_stateless_manip test_stateless_manip.cpp doctest_main.cpp)
 add_executable(test_any test_any.cpp doctest_main.cpp)
