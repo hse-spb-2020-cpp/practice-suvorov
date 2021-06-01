@@ -1,10 +1,10 @@
+#include "any.h"
+#include "any.h"  // Test double inclusion
+#include "doctest.h"
 #include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "any.h"
-#include "any.h"  // Test double inclusion
-#include "doctest.h"
 
 #define ANY_TEST_00_INIT
 #define ANY_TEST_01_OWNERSHIP

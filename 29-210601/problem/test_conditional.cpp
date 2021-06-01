@@ -1,7 +1,7 @@
-#include <type_traits>
 #include "conditional.h"
 #include "conditional.h"  // Test double inclusion
 #include "doctest.h"
+#include <type_traits>
 
 TEST_CASE("conditional") {
     CHECK(std::is_same_v<
