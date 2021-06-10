@@ -11,6 +11,19 @@ namespace hana = boost::hana;
 namespace task_simple_print {
 template<typename T>
 void simple_print(std::ostream &os, const T &value) {
+    // is_same<int, T> ~ struct { static const bool value = true/false; }
+    // is_same<int, T>::value
+    if constexpr (std::is_same_v<int, T>) {
+        os << value;
+    } else {
+        for (const auto &item : value) {
+            os << item;
+        }
+    }
+    if constexpr (false) {
+        static_assert(false);
+    }
+        
     // TODO: use 'if constexpr' and 'is_same<int>'
 }
 
@@ -34,7 +47,8 @@ TEST_CASE("simple_print") {
 
 namespace task_sum {
 template<typename T>
-auto sum(const T &a, const T &b) /* TODO: use -> and decltype */ {
+//auto sum(const T &a, const T &b) -> decltype(a + b) {
+decltype(std::declval<T>() + std::declval<T>()) sum(const T &a, const T &b) {
     return a + b;
 }
 
@@ -244,8 +258,7 @@ struct wrapper {
     T &get() { return value; }
     const T &get() const { return value; }
 
-    template<typename U = T>
-    std::enable_if_t<std::is_integral_v<U>, U> get_integral() {
+    /* TODO */ get_integral() {
         return value;
     }
 };
