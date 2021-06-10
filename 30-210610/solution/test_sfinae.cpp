@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <utility>
 
 namespace hana = boost::hana;
 
@@ -238,6 +239,52 @@ TEST_CASE("printer CTAD") {
         printer p{10.0f};
         CHECK(!print_integral_is_valid(p));
         CHECK(!print_pointer_is_valid(p));
+    }
+}
+};
+
+namespace task_wrapper {
+template<typename T>
+struct wrapper {
+    T value;
+
+    wrapper(T value_) : value(std::move(value_)) {}
+
+    T &get() { return value; }
+    const T &get() const { return value; }
+
+    template<typename U = T>
+    std::enable_if_t<std::is_integral_v<U>, U> get_integral() {
+        return value;
+    }
+};
+
+TEST_CASE("wrapper") {
+    auto get_integral_is_valid = hana::is_valid([&](auto &v) -> decltype(v.get_integral()) {});
+
+    SUBCASE("int") {
+        wrapper<int> w{123};
+        CHECK(w.get() == 123);
+        CHECK(std::as_const(w).get() == 123);
+        CHECK(w.get_integral() == 123);
+        CHECK(get_integral_is_valid(w));
+        CHECK(std::is_same_v<int, decltype(w.get_integral())>);
+    }
+
+    SUBCASE("unsigned short") {
+        wrapper<unsigned short> w{123};
+        CHECK(w.get() == 123);
+        CHECK(std::as_const(w).get() == 123);
+        CHECK(w.get_integral() == 123);
+        CHECK(get_integral_is_valid(w));
+        CHECK(std::is_same_v<unsigned short, decltype(w.get_integral())>);
+    }
+
+    SUBCASE("double") {
+        wrapper<double> w{123.0};
+        CHECK(w.get() == 123.0);
+        CHECK(std::as_const(w).get() == 123.0);
+        CHECK(!get_integral_is_valid(w));
     }
 }
 };
