@@ -156,3 +156,88 @@ TEST_CASE("print_integral") {
     }
 }
 }
+
+namespace task_printer {
+template<typename T, typename = void /* enable_if's default */>
+struct printer {
+    printer(T) {}
+};
+
+template<typename T>
+struct printer<T, std::enable_if_t<std::is_integral_v<T>>> {
+    T value;
+    void print_integral(std::ostream &os) {
+        os << value;
+    }
+};
+
+
+template<typename T>
+struct printer<T, std::enable_if_t<std::is_pointer_v<T>>> {
+    T value;
+    void print_pointer(std::ostream &os) {
+        os << value;
+    }
+};
+
+TEST_CASE("printer") {
+    std::stringstream s;
+    auto print_integral_is_valid = hana::is_valid([&](auto &v) -> decltype(v.print_integral(s)) {});
+    auto print_pointer_is_valid = hana::is_valid([&](auto &v) -> decltype(v.print_pointer(s)) {});
+
+    SUBCASE("int") {
+        printer<int> p{123};
+        p.print_integral(s);
+        CHECK(print_integral_is_valid(p));
+        CHECK(!print_pointer_is_valid(p));
+        CHECK(s.str() == "123");
+        CHECK(std::is_same_v<void, decltype(p.print_integral(s))>);
+    }
+
+    SUBCASE("unsigned short") {
+        printer<unsigned short> p{static_cast<unsigned short>(123)};
+        p.print_integral(s);
+        CHECK(print_integral_is_valid(p));
+        CHECK(!print_pointer_is_valid(p));
+        CHECK(s.str() == "123");
+        CHECK(std::is_same_v<void, decltype(p.print_integral(s))>);
+    }
+
+    SUBCASE("int*") {
+        printer<int*> p{nullptr};
+        p.print_pointer(s);
+        CHECK(!print_integral_is_valid(p));
+        CHECK(print_pointer_is_valid(p));
+        CHECK(s.str() == "0");
+        CHECK(std::is_same_v<void, decltype(p.print_pointer(s))>);
+    }
+
+    SUBCASE("invalid float") {
+        printer<float> p{10.0f};
+        CHECK(!print_integral_is_valid(p));
+        CHECK(!print_pointer_is_valid(p));
+    }
+}
+
+
+TEST_CASE("printer CTAD") {
+    std::stringstream s;
+    auto print_integral_is_valid = hana::is_valid([&](auto &v) -> decltype(v.print_integral(s)) {});
+    auto print_pointer_is_valid = hana::is_valid([&](auto &v) -> decltype(v.print_pointer(s)) {});
+
+    SUBCASE("int") {
+        printer p{123};
+        p.print_integral(s);
+        CHECK(print_integral_is_valid(p));
+        CHECK(!print_pointer_is_valid(p));
+        CHECK(s.str() == "123");
+        CHECK(std::is_same_v<void, decltype(p.print_integral(s))>);
+    }
+
+    SUBCASE("invalid float") {
+        printer p{10.0f};
+        CHECK(!print_integral_is_valid(p));
+        CHECK(!print_pointer_is_valid(p));
+    }
+}
+};
